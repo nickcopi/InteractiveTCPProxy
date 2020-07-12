@@ -1,14 +1,20 @@
 const net = require('net');
-
+let server,nk;
 
 const makeServer = (address,port)=>{
 	return new Promise((resolve,reject)=>{
-		const server = net.createServer((socket) => {
-			const nk =  net.createConnection(Number(port),address, () => {
+		if(server) server.destroy();
+		if(nk) nk.destroy();
+		server = net.createServer((socket) => {
+		nk =  net.createConnection(Number(port),address, () => {
 				nk.on('data',data=>{
+					//console.log(data.toString());
 					socket.write(data);
 				});
 				socket.on('data',data=>{
+					//console.log(data.toString());
+					if(data.toString().includes('NetworkedUnityToSimulation'))
+						console.log(data.toString('hex'));
 					nk.write(data);
 				});
 			});
