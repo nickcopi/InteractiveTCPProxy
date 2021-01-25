@@ -2,12 +2,26 @@ const net = require('net');
 const logger = require('./logger');
 const warper = require('./warper');
 let server,nk;
+let clients = [];
+
+const killServer = server=>{
+	return new Promise((resolve,reject)=>{
+		server.close(()=>{
+			resolve();
+		});
+	});
+}
 
 const makeServer = (address,port)=>{
-	return new Promise((resolve,reject)=>{
-		if(server) server.destroy();
+	return new Promise( async (resolve,reject)=>{
+		if(server){
+			clients.forEach(client=>client.destroy());
+			clients = [];
+			await killServer(server);
+		}
 		if(nk) nk.destroy();
 		server = net.createServer((socket) => {
+			clients.push(socket);
 			nk =  net.createConnection(Number(port),address, () => {
 				nk.on('data',data=>{
 					warper.warp(data);
@@ -38,6 +52,8 @@ const makeServer = (address,port)=>{
 		}).on('error', (err) => {
 			// Handle errors here.
 			console.error(err);
+		}).on('close',()=>{
+			server.unref();
 		});
 
 		// Grab an arbitrary unused port.

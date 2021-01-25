@@ -6,9 +6,9 @@ const PORT = 8090;
 app.get('/',async (req,res)=>{
 	console.log(req.query);
 	const {address,port} = req.query;
-	if(!address || !port) return res.send('BAD');
+	if(!address || !port) return res.send({success:false,message:'Invalid request parameters.'});
 	await socket.makeServer(address,port);
-	res.send('ok');
+	res.send({success:true});
 });
 
 app.listen(PORT,()=>{
