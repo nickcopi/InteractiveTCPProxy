@@ -45,6 +45,18 @@ const getLogs = async (runId)=>{
 	return res;
 }
 
+const nameSession = async(name,runId)=>{
+	const update = {
+		"$set":{
+			name
+		}
+	}
+	const res = await db.collection('sessions').updateOne({runId},update).catch(e=>{
+		console.error(e);
+		throw 'Request failed!';
+	});
+}
+
 const getSessions = async ()=>{
 	const res = await db.collection('sessions').find({}).toArray().catch(e=>{
 		console.error(e);
@@ -62,6 +74,7 @@ const init = async()=>{
 module.exports ={
 	getSessions,
 	newSession,
+	nameSession,
 	addLog,
 	getLogs,
 	init

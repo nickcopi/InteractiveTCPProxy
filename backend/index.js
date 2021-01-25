@@ -2,8 +2,11 @@ const socket = require('./socket');
 const api = require('./api');
 const db = require('./db');
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 const PORT = 8090;
+
+app.use(bodyParser.json());
 
 app.get('/createServer',async (req,res)=>{
 	console.log(req.query);
@@ -22,6 +25,12 @@ app.get('/getLogs', async (req,res)=>{
 	if(!runId) return res.send({message:'Invalid request parameters.'});
 	res.send(await api.getLogs(runId));	
 });
+
+app.post('/nameSession', async(req,res)=>{
+	const {name, runId} = req.body;
+	if(!runId) return res.send({success:false,message:'Invalid request parameters.'});
+	res.send(await api.nameSession(name,runId));
+})
 
 const init  = async ()=>{
 	await db.init();
