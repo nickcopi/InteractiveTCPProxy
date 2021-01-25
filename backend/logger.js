@@ -1,11 +1,20 @@
-const fs = require('fs');
-const logs = [];
+const db = require('./db');
 
-const log = (buf, srcAddr, srcPort, destAddr, destPort) =>{
-	console.log(buf.toString());
-	logs.push(new Log(buf,srcAddr,srcPort,destAddr,destPort));
-	//fs.writeFileSync('comms.log',JSON.stringify(logs,null,2));
+
+
+class Logger{
+	constructor(runId){
+		this.runId = runId;
+	}
+	async log(buf, srcAddr, srcPort, destAddr, destPort){
+		console.log(buf.toString());
+		await db.addLog(new Log(buf,srcAddr,srcPort,destAddr,destPort), this.runId);
+	}
+	async init(){
+		await db.newSession(this.runId);
+	}
 }
+
 
 
 
@@ -28,6 +37,4 @@ class Log{
 	}
 
 }
-module.exports = {
-	log
-}
+module.exports = Logger

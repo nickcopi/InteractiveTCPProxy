@@ -1,6 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId; 
-const url = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@mongo:27017`;
+const url = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@localhost:27017`;
 const dbName = 'tcpproxy';
 let client;
 let db;
@@ -16,12 +16,41 @@ const createCollection  = async name=>{
 	return res;
 }
 
+
+const newSession = async(runId)=>{
+	const res = await db.collection('sessions').insertOne({runId,logs:[]}).catch(e=>{
+		console.error(e);
+		throw 'Request failed!';
+	});
+}
+
+const addLog = async (log,runId)=>{
+	const update = {
+		"$push":{
+			"logs":log
+		}
+	}
+
+	const res = await db.collection('sessions').updateOne({runId},update).catch(e=>{
+		console.error(e);
+		throw 'Request failed!';
+	});
+}
+
+const getLogs = async (runId)=>{
+	const res = await db.collection('sessions').find({runId}).toArray().catch(e=>{
+		console.error(e);
+		throw 'Request failed!';
+	});
+	return res;
+}
+
 const getSessions = async ()=>{
 	const res = await db.collection('sessions').find({}).toArray().catch(e=>{
 		console.error(e);
 		throw 'Request failed!';
 	});
-	return res.map(session=>({_id:sessions._id,name:session.name}));
+	return res.map(session=>({runId:session.runId,name:session.name}));
 }
 
 const init = async()=>{
@@ -32,5 +61,8 @@ const init = async()=>{
 }
 module.exports ={
 	getSessions,
+	newSession,
+	addLog,
+	getLogs,
 	init
 }

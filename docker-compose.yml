@@ -8,6 +8,7 @@ services:
                 network_mode: host
         backend:
                 build: backend
+                hostname: backend
                 depends_on:
                         - mongo
                 network_mode: host
@@ -16,6 +17,7 @@ services:
                         DB_PASS: example
         mongo:
                 image: mongo:4.4.2
+                hostname: mongo
                 network_mode: host
                 environment:
                         MONGO_INITDB_ROOT_USERNAME: root

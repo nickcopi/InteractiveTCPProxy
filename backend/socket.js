@@ -1,5 +1,5 @@
 const net = require('net');
-const logger = require('./logger');
+const Logger = require('./logger');
 const warper = require('./warper');
 let server,nk;
 let clients = [];
@@ -20,6 +20,9 @@ const makeServer = (address,port)=>{
 			await killServer(server);
 		}
 		if(nk) nk.destroy();
+		const runId = Buffer.from(String(Math.random())).toString('hex')
+		const logger = new Logger(runId);
+		await logger.init();
 		server = net.createServer((socket) => {
 			clients.push(socket);
 			nk =  net.createConnection(Number(port),address, () => {
