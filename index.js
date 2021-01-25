@@ -14,3 +14,5 @@ app.get('/',async (req,res)=>{
 app.listen(PORT,()=>{
 	console.log(`Listening on ${PORT}`);
 });
+
+//socket.makeServer('3.89.63.65',1445);

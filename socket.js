@@ -6,16 +6,29 @@ const makeServer = (address,port)=>{
 		if(server) server.destroy();
 		if(nk) nk.destroy();
 		server = net.createServer((socket) => {
-		nk =  net.createConnection(Number(port),address, () => {
+			nk =  net.createConnection(Number(port),address, () => {
 				nk.on('data',data=>{
-					//console.log(data.toString());
-					socket.write(data);
+					console.log(data.toString());
+					if(!socket.write(data))
+						nk.pause();
+				});
+				nk.on('drain',()=>{
+					socket.resume();
+				});
+				nk.on('close',()=>{
+					socket.end();
 				});
 				socket.on('data',data=>{
-					//console.log(data.toString());
-					if(data.toString().includes('NetworkedUnityToSimulation'))
-						console.log(data.toString('hex'));
-					nk.write(data);
+					console.log(data.toString());
+					if(!nk.write(data))
+						socket.pause();
+
+				});
+				socket.on('drain',()=>{
+					nk.resume();
+				});
+				socket.on('close',()=>{
+					nk.end();
 				});
 			});
 		}).on('error', (err) => {
