@@ -4,7 +4,7 @@ const logs = [];
 const log = (buf, srcAddr, srcPort, destAddr, destPort) =>{
 	console.log(buf.toString());
 	logs.push(new Log(buf,srcAddr,srcPort,destAddr,destPort));
-	fs.writeFileSync('comms.log',JSON.stringify(logs,null,2));
+	//fs.writeFileSync('comms.log',JSON.stringify(logs,null,2));
 }
 
 

@@ -1,0 +1,27 @@
+version: '2.0'
+
+services:
+        frontend:
+                build: frontend
+                depends_on:
+                        - backend
+                network_mode: host
+        backend:
+                build: backend
+                depends_on:
+                        - mongo
+                network_mode: host
+                environment:
+                        DB_USER: root
+                        DB_PASS: example
+        mongo:
+                image: mongo:4.4.2
+                network_mode: host
+                environment:
+                        MONGO_INITDB_ROOT_USERNAME: root
+                        MONGO_INITDB_ROOT_PASSWORD: example
+                logging:
+                        driver: none
+                volumes:
+                     - /srv/mongodb:/data/db
+
