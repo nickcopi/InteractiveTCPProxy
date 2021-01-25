@@ -1,4 +1,5 @@
 const net = require('net');
+const logger = require('./logger');
 let server,nk;
 
 const makeServer = (address,port)=>{
@@ -8,7 +9,7 @@ const makeServer = (address,port)=>{
 		server = net.createServer((socket) => {
 			nk =  net.createConnection(Number(port),address, () => {
 				nk.on('data',data=>{
-					console.log(data.toString());
+					logger.log(data, socket.remoteAddress, socket.remotePort, nk.remoteAddress, nk.remotePort);
 					if(!socket.write(data))
 						nk.pause();
 				});
@@ -19,7 +20,7 @@ const makeServer = (address,port)=>{
 					socket.end();
 				});
 				socket.on('data',data=>{
-					console.log(data.toString());
+					logger.log(data,nk.remoteAddress, nk.remotePort, socket.remoteAddress, socket.remotePort);
 					if(!nk.write(data))
 						socket.pause();
 
