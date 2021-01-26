@@ -1,22 +1,19 @@
 import React, {Component} from 'react';
 
-export default class Session extends Component {
+export default class Log extends Component {
 	constructor(props){
 		super(props);
 	}
 	defaultProps = {
-		name:'',
-		runId:'',
-		click:()=>{}
+		data:null
 	}
 	handleClick(e){
-		this.props.click(this.props.runId,this.props.name);
 	}
 	render(){
-		let {name,runId} = this.props;
+		let {data} = this.props;
 		return (
 			<div className='sessionBar' onClick={this.handleClick.bind(this)}>
-				{name?name:runId}	
+				{data}
 			</div>
 		);
 	}

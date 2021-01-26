@@ -42,7 +42,7 @@ const getLogs = async (runId)=>{
 		console.error(e);
 		throw 'Request failed!';
 	});
-	return res;
+	return res[0];
 }
 
 const nameSession = async(name,runId)=>{

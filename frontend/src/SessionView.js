@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import LogSidebar from './LogSidebar';
 
 export default class SessionView extends Component {
 	constructor(props){
@@ -6,6 +7,7 @@ export default class SessionView extends Component {
 	}
 	defaultProps = {
 		runId:'',
+		name:''
 	}
 	state = {
 		data:null
@@ -13,10 +15,15 @@ export default class SessionView extends Component {
 	
 
 	render(){
-		console.log(this.state.data);
-		let {runId} = this.props;
+		let {runId,name} = this.props;
+		const sideLog = this.state.data?this.loadSession():'Loading...';
 		return (
-			<div className='sessionBar'>
+			<div>
+				<div className="sessionBar">{name?name:runId}</div>
+				<div className="sessionView">
+					{sideLog}
+
+				</div>
 			</div>
 		);
 	}
@@ -24,6 +31,7 @@ export default class SessionView extends Component {
 		this.updateSession();
 	}
 	updateSession(){
+		console.log(this.props.runId);
 		fetch(`/api/getLogs?runId=${this.props.runId}`)
 			.then(res=>res.json())
 			.then(data=>{
@@ -35,7 +43,9 @@ export default class SessionView extends Component {
 			});
 	}
 
-	loadSession(sessions){
+	loadSession(){
+		console.log(this.state.data);
+		return (<LogSidebar data={this.state.data}/>);
 
 	}
 }

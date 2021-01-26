@@ -34,7 +34,7 @@ export default class Sessions extends Component {
 	}
 	loadSessions(sessions){
 		return sessions.map(session=>(
-			<Session name={session.name?session.name:session.runId} click={this.props.click}/>
+			<Session name={session.name} runId={session.runId} click={this.props.click}/>
 
 		));
 	}

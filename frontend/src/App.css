@@ -16,6 +16,7 @@ body{
 	/*display: flex;*/
 	cursor:pointer;
 	/*justify-content: space-evenly;*/
+	width:100%;
 }
 .sessionBar:hover{
 	background-color:#1D1E18;
@@ -38,4 +39,21 @@ body{
 	background-color: #212529;
 	position:fixed;
 	width:100%
+}
+
+.sessionView{
+	display:flex;	
+}
+.logSidebar{
+	width:33%;
+	overflow-y:scroll;
+	overflow-x:none;
+}
+.hexEdit{
+	width:66%;
+	height:75%;
+}
+.logInfo{
+	height:20%;
+	width:66%;
 }
