@@ -11,14 +11,13 @@ export default class Log extends Component {
 		srcAddress:'',
 		srcPort:'',
 		timestamp:'',
-		index:0
-	}
-	handleClick(e){
+		index:0,
+		click:()=>{}
 	}
 	render(){
 		let {data,srcAddress,destAddress,index,timestamp} = this.props;
 		return (
-			<div className='sessionBar' onClick={this.handleClick.bind(this)}>
+			<div onClick={e=>this.props.click(index)} className='sessionBar'>
 				{index + ') ' + new Date(timestamp)}
 			</div>
 		);

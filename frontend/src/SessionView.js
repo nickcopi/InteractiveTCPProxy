@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import LogSidebar from './LogSidebar';
+import HexEditorView from './HexEditorView';
 
 export default class SessionView extends Component {
 	constructor(props){
@@ -12,21 +13,30 @@ export default class SessionView extends Component {
 	state = {
 		data:null,
 		name:'',
-		runId:''
+		runId:'',
+		selectedLog:null
 	}
 	change(e){
 		this.setState({name:e.target.innerText});
 		this.renameSession(e.target.innerText,this.state.runId);
 	}
+	clickLog(i){
+		this.setState({selectedLog:i});
+	}
 
 	render(){
 		let {runId,name} = this.state;
 		const sideLog = this.state.data?this.loadSession():'Loading...';
+		let activeLog;
+		//console.log('active log ' + this.state.selectedLog);
+		if(this.state.data && this.state.selectedLog !== null) activeLog = this.state.data.logs[this.state.selectedLog];
+		//console.log('ugh',this.state.data,this.state.selectedLog!==null);
 		return (
 			<div>
 				<div contentEditable="true" onBlur={this.change.bind(this)} className="sessionBar">{name?name:runId}</div>
 				<div className="sessionView">
 					{sideLog}
+					<HexEditorView data={activeLog?activeLog.data:null}/>
 
 				</div>
 			</div>
@@ -49,7 +59,7 @@ export default class SessionView extends Component {
 	}
 
 	loadSession(){
-		return (<LogSidebar data={this.state.data}/>);
+		return (<LogSidebar click={this.clickLog.bind(this)} data={this.state.data}/>);
 
 	}
 	renameSession(name,runId){
