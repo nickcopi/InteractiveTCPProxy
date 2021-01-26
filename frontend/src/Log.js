@@ -5,15 +5,21 @@ export default class Log extends Component {
 		super(props);
 	}
 	defaultProps = {
-		data:null
+		data:null,
+		destAddress:'',
+		destPort:'',
+		srcAddress:'',
+		srcPort:'',
+		timestamp:'',
+		index:0
 	}
 	handleClick(e){
 	}
 	render(){
-		let {data} = this.props;
+		let {data,srcAddress,destAddress,index,timestamp} = this.props;
 		return (
 			<div className='sessionBar' onClick={this.handleClick.bind(this)}>
-				{data}
+				{index + ') ' + new Date(timestamp)}
 			</div>
 		);
 	}

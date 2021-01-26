@@ -3,6 +3,7 @@ version: '2.0'
 services:
         frontend:
                 build: frontend
+                hostname: frontend
                 depends_on:
                         - backend
                 network_mode: host

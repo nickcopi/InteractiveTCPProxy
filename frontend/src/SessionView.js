@@ -10,16 +10,21 @@ export default class SessionView extends Component {
 		name:''
 	}
 	state = {
-		data:null
+		data:null,
+		name:'',
+		runId:''
 	}
-	
+	change(e){
+		this.setState({name:e.target.innerText});
+		this.renameSession(e.target.innerText,this.state.runId);
+	}
 
 	render(){
-		let {runId,name} = this.props;
+		let {runId,name} = this.state;
 		const sideLog = this.state.data?this.loadSession():'Loading...';
 		return (
 			<div>
-				<div className="sessionBar">{name?name:runId}</div>
+				<div contentEditable="true" onBlur={this.change.bind(this)} className="sessionBar">{name?name:runId}</div>
 				<div className="sessionView">
 					{sideLog}
 
@@ -28,10 +33,10 @@ export default class SessionView extends Component {
 		);
 	}
 	componentDidMount(){
+		this.setState({runId:this.props.runId,name:this.props.name});
 		this.updateSession();
 	}
 	updateSession(){
-		console.log(this.props.runId);
 		fetch(`/api/getLogs?runId=${this.props.runId}`)
 			.then(res=>res.json())
 			.then(data=>{
@@ -44,8 +49,26 @@ export default class SessionView extends Component {
 	}
 
 	loadSession(){
-		console.log(this.state.data);
 		return (<LogSidebar data={this.state.data}/>);
+
+	}
+	renameSession(name,runId){
+		console.log(this.state);
+		fetch('/api/nameSession',{
+			method: 'POST',
+			headers:{
+				'Content-Type': 'application/json'
+			},
+			body:JSON.stringify({
+				name,
+				runId
+			})
+		}).then(res=>res.json()).then(res=>{
+			console.log(res);
+		}).catch(e=>{
+			console.error(e);
+		});
+
 
 	}
 }
