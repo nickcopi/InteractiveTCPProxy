@@ -1,5 +1,5 @@
 import './App.css';
-import {BrowserRouter as Route} from 'react-router-dom';
+import {Route} from 'react-router-dom';
 import {HashRouter} from 'react-router-dom';
 import MenuBar from './MenuBar';
 import Home from './Home';

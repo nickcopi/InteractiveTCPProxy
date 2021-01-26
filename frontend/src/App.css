@@ -4,3 +4,38 @@ body{
 	color: white;
 }
 
+.sessionBar{
+	border-style:solid;
+	background-color: #AAAAAA;
+	border-color: #C0FADB;
+	/*padding:10px;*/
+	border-left:0px;
+	border-right:0px;
+	padding-top:10px;
+	padding-bottom:10px;
+	display: flex;
+	cursor:pointer;
+	/*justify-content: space-evenly;*/
+}
+.sessionBar:hover{
+	background-color: #BBBBBB;
+}
+
+.menuItem{
+	color:white;
+	background-color:#AAAAAA;
+	text-decoration: none;
+	padding:10px;
+}
+.menuItem:hover{
+	background-color:#BBBBBB;
+	cursor:pointer;
+
+}
+.menuBar{
+	display: flex;
+	justify-content: space-evenly;
+	background-color: #AAAAAA;
+	position:fixed;
+	width:100%
+}

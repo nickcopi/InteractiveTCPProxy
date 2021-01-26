@@ -16,7 +16,7 @@ app.get('/createServer',async (req,res)=>{
 	res.send({success:true});
 });
 
-app.get('/listSessions', async (req,res)=>{
+app.get('/getSessions', async (req,res)=>{
 	res.send(await api.getSessions());	
 });
 
