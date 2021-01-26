@@ -4,9 +4,9 @@ COPY . /app
 
 WORKDIR /app
 
-#RUN npm install
+RUN npm install
 
-#RUN npm run build
+RUN npm run build
 
 RUN apk update
 
@@ -16,7 +16,7 @@ RUN mkdir -p /run/nginx
 
 RUN mkdir -p /var/www/html
 
-#RUN cp -r /app/build/* /var/www/html
+RUN cp -r /app/build/* /var/www/html
 
 COPY nginx.conf /etc/nginx/conf.d/
 
