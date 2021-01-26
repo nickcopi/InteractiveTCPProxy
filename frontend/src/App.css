@@ -6,36 +6,36 @@ body{
 
 .sessionBar{
 	border-style:solid;
-	background-color: #AAAAAA;
-	border-color: #C0FADB;
+	background-color: #212529;
+	border-color: #b19cd9;
 	/*padding:10px;*/
 	border-left:0px;
 	border-right:0px;
 	padding-top:10px;
 	padding-bottom:10px;
-	display: flex;
+	/*display: flex;*/
 	cursor:pointer;
 	/*justify-content: space-evenly;*/
 }
 .sessionBar:hover{
-	background-color: #BBBBBB;
+	background-color:#1D1E18;
 }
 
 .menuItem{
 	color:white;
-	background-color:#AAAAAA;
+	background-color:#212529;
 	text-decoration: none;
 	padding:10px;
 }
 .menuItem:hover{
-	background-color:#BBBBBB;
+	background-color:#1D1E18;
 	cursor:pointer;
 
 }
 .menuBar{
 	display: flex;
 	justify-content: space-evenly;
-	background-color: #AAAAAA;
+	background-color: #212529;
 	position:fixed;
 	width:100%
 }

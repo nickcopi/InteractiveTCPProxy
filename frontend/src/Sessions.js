@@ -1,40 +1,27 @@
 import React, { Component } from 'react';
-import Session from './Session';
+import SessionList from './SessionList';
+import SessionView from './SessionView';
 
 
 export default class Sessions extends Component {
-	state = {sessions:null};
+	state = {runId:null};
 	componentDidMount() {
-		console.log('Mounting sessions list.');
-		this.updateSessions();
 	}
-	updateSessions(){
-		fetch('/api/getSessions')
-			.then(res=>res.json())
-			.then(data=>{
-				this.setState({sessions:data});
 
-			})
-			.catch((err)=>{
-				console.log(err);
-			});
+
+	changeView(runId){
+		this.setState({runId})
 	}
 
 	render() {
-		let sessions = this.state.sessions;
-		let data = sessions?this.loadSessions(sessions):'Loading';
+		let toLoad;
+		if(!this.state.runId) toLoad = (<SessionList click={this.changeView.bind(this)}/>)
+		else toLoad = (<SessionView runId={this.state.runId}/>)
 		return (
 			<div>
-				{data}
-				<br/>
+				{toLoad}
 			</div>
 		);
-	}
-	loadSessions(sessions){
-		return sessions.map(session=>(
-			<Session name={session.name?session.name:session.runId}/>
-
-		));
 	}
 }
 
