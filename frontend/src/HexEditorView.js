@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import HexEditor from 'react-hex-editor';
+import oneDarkPro from 'react-hex-editor/themes/oneDarkPro';
 
 export default class SessionView extends Component {
 	constructor(props){
@@ -11,7 +13,14 @@ export default class SessionView extends Component {
 		let {data} = this.props;
 		return (
 			<div className="hexEdit">
-				{data?Buffer.from(data).toString('hex'):''}
+				<HexEditor
+			      		columns={0x10}
+			      		rows={0x10}
+			      		data={data?(new TextEncoder('utf-16')).encode(atob(data)):[]}
+			      		nonce={1}
+					showAscii={true}
+			      		theme={{ hexEditor: oneDarkPro }}
+			    	/>
 			</div>
 		);
 	}
