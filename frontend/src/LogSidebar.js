@@ -12,7 +12,7 @@ export default class LogSidebar extends Component {
 	render(){
 		let {logs} = this.props.data;
 		return (
-			<div className='logSidebar'>
+			<div className='logSidebar darkScrollbar'>
 				{logs.map((log,i)=>(<Log click={this.props.click} data={log.data} destAddress={log.destAddress} srcAddress={log.sourceAddress} timestamp={log.timeStamp} index={i} />))}	
 			</div>
 		);

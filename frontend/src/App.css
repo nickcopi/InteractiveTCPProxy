@@ -46,8 +46,25 @@ body{
 }
 .logSidebar{
 	width:33%;
+	height:90vh;
 	overflow-y:scroll;
-	overflow-x:none;
+}
+.darkScrollbar::-webkit-scrollbar {
+	width: auto;
+	height: 0px;
+}
+.darkScrollbar::-webkit-scrollbar-button {
+	width: auto;
+	background-color: rgb(73, 81, 98);
+	height: 0px;
+}
+.darkScrollbar::-webkit-scrollbar-thumb {
+	width: auto;
+	background-color: rgb(73, 81, 98);
+}
+.darkScrollbar::-webkit-scrollbar-track {
+	width: auto;
+	background-color: rgb(40, 44, 52);
 }
 .hexEdit{
 	width:66%;
