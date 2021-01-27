@@ -14,8 +14,8 @@ export default class SessionView extends Component {
 		return (
 			<div className="hexEdit">
 				<HexEditor
-			      		columns={0x10}
-			      		rows={0x10}
+			      		columns={0x20}
+			      		rows={0x24}
 			      		data={data?(new TextEncoder('utf-16')).encode(atob(data)):[]}
 			      		nonce={1}
 					showAscii={true}
