@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import LogSidebar from './LogSidebar';
+import LogInfo from './LogInfo';
 import HexEditorView from './HexEditorView';
 
 export default class SessionView extends Component {
@@ -30,12 +31,17 @@ export default class SessionView extends Component {
 		let activeLog;
 		console.log(this.state.data);
 		if(this.state.data && this.state.selectedLog !== null) activeLog = this.state.data.logs[this.state.selectedLog];
+		let logInfo = '';
+		if(activeLog) logInfo = this.loadInfo(activeLog);
 		return (
 			<div>
 				<div contentEditable="true" onBlur={this.change.bind(this)} className="sessionBar">{name?name:runId}</div>
 				<div className="sessionView">
 					{sideLog}
-					<HexEditorView data={activeLog?activeLog.data:null}/>
+					<div className="sessionSideView">
+						<HexEditorView data={activeLog?activeLog.data:null}/>
+						{logInfo}
+					</div>
 
 				</div>
 			</div>
@@ -55,6 +61,10 @@ export default class SessionView extends Component {
 			.catch((err)=>{
 				console.log(err);
 			});
+	}
+		
+	loadInfo(activeLog){
+		return (<LogInfo log={activeLog}/>);
 	}
 
 	loadSession(){
