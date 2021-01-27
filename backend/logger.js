@@ -21,7 +21,7 @@ class Logger{
 
 class Log{
 	constructor(buf, srcAddr, srcPort,  destAddr, destPort){
-		this.timeStamp = Date.Now();
+		this.timeStamp = Date.now();
 		this.data = buf.toString('base64');
 		this.sourceAddress = this.processAddress(srcAddr);
 		this.sourcePort = srcPort;

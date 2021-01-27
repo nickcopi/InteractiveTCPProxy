@@ -13,7 +13,7 @@ export default class LogSidebar extends Component {
 		let {logs} = this.props.data;
 		return (
 			<div className='logSidebar'>
-				{logs.map((log,i)=>(<Log click={this.props.click} data={log.data} destAddress={log.destAddress} srcAddress={log.sourceAddress} timestamp={log.timestamp} index={i} />))}	
+				{logs.map((log,i)=>(<Log click={this.props.click} data={log.data} destAddress={log.destAddress} srcAddress={log.sourceAddress} timestamp={log.timeStamp} index={i} />))}	
 			</div>
 		);
 	}

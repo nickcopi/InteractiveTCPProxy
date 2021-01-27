@@ -18,7 +18,7 @@ export default class Log extends Component {
 		let {data,srcAddress,destAddress,index,timestamp} = this.props;
 		return (
 			<div onClick={e=>this.props.click(index)} className='sessionBar'>
-				{index + ') ' + new Date(timestamp)}
+				{index + ') ' + timestamp}
 			</div>
 		);
 	}

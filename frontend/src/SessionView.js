@@ -28,9 +28,8 @@ export default class SessionView extends Component {
 		let {runId,name} = this.state;
 		const sideLog = this.state.data?this.loadSession():'Loading...';
 		let activeLog;
-		//console.log('active log ' + this.state.selectedLog);
+		console.log(this.state.data);
 		if(this.state.data && this.state.selectedLog !== null) activeLog = this.state.data.logs[this.state.selectedLog];
-		//console.log('ugh',this.state.data,this.state.selectedLog!==null);
 		return (
 			<div>
 				<div contentEditable="true" onBlur={this.change.bind(this)} className="sessionBar">{name?name:runId}</div>
