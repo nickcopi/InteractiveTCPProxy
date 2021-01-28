@@ -11,14 +11,16 @@ export default class Log extends Component {
 		srcAddress:'',
 		srcPort:'',
 		timestamp:'',
+		name:'',
 		index:0,
+		colored:false,
 		click:()=>{}
 	}
 	render(){
-		let {data,srcAddress,destAddress,index,timestamp} = this.props;
+		let {data,srcAddress,destAddress,index,timestamp,name} = this.props;
 		return (
-			<div onClick={e=>this.props.click(index)} className='sessionBar'>
-				{index + ') ' + timestamp}
+			<div onClick={e=>this.props.click(index)} className={'sessionBar ' + (this.props.colored?'logItemColored':'logItemUnColored')}>
+				{index + ') ' + (name?name:timestamp)}
 			</div>
 		);
 	}

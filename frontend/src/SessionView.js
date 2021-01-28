@@ -24,13 +24,20 @@ export default class SessionView extends Component {
 	clickLog(i){
 		this.setState({selectedLog:i});
 	}
+	logNameBlur(e,index){
+		const data = this.state.data;
+		const name = e.target.innerText;
+		data.logs[index].name=name;
+		this.setState({data});
+		this.renameLog(name,this.state.runId,index);
+	}
 
 	render(){
 		let {runId,name} = this.state;
 		const sideLog = this.state.data?this.loadSession():'Loading...';
 		let activeLog;
 		console.log(this.state.data);
-		if(this.state.data && this.state.selectedLog !== null) activeLog = this.state.data.logs[this.state.selectedLog];
+		if(this.state.data && this.state.selectedLog !== null) activeLog = {...this.state.data.logs[this.state.selectedLog],index:this.state.selectedLog};
 		let logInfo = '';
 		if(activeLog) logInfo = this.loadInfo(activeLog);
 		return (
@@ -64,11 +71,31 @@ export default class SessionView extends Component {
 	}
 		
 	loadInfo(activeLog){
-		return (<LogInfo log={activeLog}/>);
+		return (<LogInfo handleBlur={this.logNameBlur.bind(this)} log={activeLog}/>);
 	}
 
 	loadSession(){
 		return (<LogSidebar click={this.clickLog.bind(this)} data={this.state.data}/>);
+
+	}
+	renameLog(name,runId,index){
+		console.log(this.state);
+		fetch('/api/nameLog',{
+			method: 'POST',
+			headers:{
+				'Content-Type': 'application/json'
+			},
+			body:JSON.stringify({
+				name,
+				runId,
+				index
+			})
+		}).then(res=>res.json()).then(res=>{
+			console.log(res);
+		}).catch(e=>{
+			console.error(e);
+		});
+
 
 	}
 	renameSession(name,runId){

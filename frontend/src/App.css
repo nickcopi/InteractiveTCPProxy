@@ -52,6 +52,14 @@ body{
 	height:90vh;
 	overflow-y:scroll;
 }
+
+.logItemColored{
+	background-color: rgb(40, 44, 52);
+}
+
+.logItemUnColored{
+	background-color: #111519;
+}
 .darkScrollbar::-webkit-scrollbar {
 	width: auto;
 	height: 0px;
@@ -70,11 +78,13 @@ body{
 	background-color: rgb(40, 44, 52);
 }
 .hexEdit{
-	width:66%;
-	height:79vh;
+}
+.logInfoHeader{
+	font-size:20px;
 }
 .logInfo{
 	padding-top:2vh;
 	width:100%;
 	background-color: rgb(40, 44, 52);
+	line-height:1.5;
 }
