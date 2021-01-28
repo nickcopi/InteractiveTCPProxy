@@ -10,14 +10,21 @@ export default class SessionView extends Component {
 		data:''
 	}
 	state = {
-		selected:null
+		selected:null,
+		endianness:'LE'
 	}
 	handleMouseUp(){
 		const bytes = [...document.getElementsByClassName('selection')].filter(e=>[...e.classList].includes('byteValue')).map(e=>Number('0x' + [...e.innerText].filter(b=>b!=='\n').join('')));
 		const buf = Buffer.from(bytes);
-		//console.log(buf.toString());
 		if(buf.length)
 			this.setState({selected:this.valueList(buf)});
+	}
+	toggleEndianness(){
+		if(this.state.endianness === 'LE')
+			this.setState({endianness:'BE'});
+		else
+			this.setState({endianness:'LE'});
+		this.handleMouseUp();
 	}
 	valueList(buf){
 		return `
@@ -34,7 +41,7 @@ export default class SessionView extends Component {
 		`
 	}
 	tryRead(buf,call,size){
-		const endianness = 'LE';
+		const endianness = this.state.endianness;
 		const func = call + (size>1?endianness:'');
 		if(buf.length>= size)
 			return buf[func](0,size);
@@ -45,8 +52,8 @@ export default class SessionView extends Component {
 		return (
 			<div onMouseUp={this.handleMouseUp.bind(this)} className="hexEdit">
 				<HexEditor
-			      		columns={0x1F}
-			      		rows={0x24}
+			      		columns={0x20}
+			      		rows={0x22}
 			      		data={data?(new TextEncoder('utf-16')).encode(atob(data)):[]}
 			      		nonce={1}
 					showAscii={true}
@@ -54,6 +61,9 @@ export default class SessionView extends Component {
 			      		theme={{ hexEditor: oneDarkPro }}
 			    	/>
 				<div class="valueInfo">
+					<div onClick={this.toggleEndianness.bind(this)}>
+						{this.state.endianness === 'LE'?'Little Endian':'Big Endian'}
+					</div>
 					{this.state.selected}
 				</div>
 			</div>
