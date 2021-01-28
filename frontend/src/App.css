@@ -46,6 +46,7 @@ body{
 }
 .sessionSideView{
 	flex-direction:column;
+	width:100%;
 }
 .logSidebar{
 	width:25%;
@@ -83,7 +84,14 @@ body{
 	background-color: rgb(40, 44, 52);
 }
 .hexEdit{
+	background-color: rgb(40, 44, 52);
+	width:100%;
 }
+
+.valueInfo{
+	background-color: rgb(40, 44, 52);
+}
+
 .logInfoHeader{
 	font-size:20px;
 }
