@@ -18,9 +18,19 @@ const nameSession = async (name,runId)=>{
 	return {success:true,message:`Name of ${runId} updated to ${name}.`};
 }
 
+const nameLog = async (name,runId,index)=>{
+	try{
+		await db.nameLog(name,runId,index)
+	} catch(e){
+		return {success:false,message:e};
+	}
+	return {success:true,message:`Name of ${runId} log #${index} updated to ${name}.`};
+}
+
 module.exports = {
 	getSessions,
 	getLogs,
-	nameSession
+	nameSession,
+	nameLog
 
 }

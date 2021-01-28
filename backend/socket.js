@@ -28,7 +28,7 @@ const makeServer = (address,port)=>{
 			nk =  net.createConnection(Number(port),address, () => {
 				nk.on('data',data=>{
 					warper.warp(data);
-					logger.log(data, socket.remoteAddress, socket.remotePort, nk.remoteAddress, nk.remotePort);
+					logger.log(data, nk.remoteAddress, nk.remotePort, socket.remoteAddress, socket.remotePort);
 					if(!socket.write(data))
 						nk.pause();
 				});
@@ -40,7 +40,7 @@ const makeServer = (address,port)=>{
 				});
 				socket.on('data',data=>{
 					warper.warp(data);
-					logger.log(data,nk.remoteAddress, nk.remotePort, socket.remoteAddress, socket.remotePort);
+					logger.log(data,socket.remoteAddress, socket.remotePort, nk.remoteAddress, nk.remotePort);
 					if(!nk.write(data))
 						socket.pause();
 

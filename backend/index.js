@@ -32,6 +32,12 @@ app.post('/nameSession', async(req,res)=>{
 	res.send(await api.nameSession(name,runId));
 })
 
+app.post('/nameLog', async(req,res)=>{
+	const {name, runId, index} = req.body;
+	if(!runId || !('index' in req.body)) return res.send({success:false,message:'Invalid request parameters.'});
+	res.send(await api.nameLog(name,runId,index));
+})
+
 const init  = async ()=>{
 	await db.init();
 	app.listen(PORT,()=>{
