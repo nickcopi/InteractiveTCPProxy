@@ -48,8 +48,13 @@ body{
 	flex-direction:column;
 	width:100%;
 }
-.logSidebar{
+
+.logFullSideBar{
 	width:25%;
+	display:flex;
+	flex-direction:column;
+}
+.logSidebar{
 	height:90vh;
 	overflow-y:scroll;
 }
@@ -91,6 +96,18 @@ body{
 .valueInfo{
 	background-color: rgb(40, 44, 52);
 }
+
+.searchBar{
+	color:white;
+	background-color: #212529;
+	width:100%;
+	border:0px;
+	padding-top:10px;
+	padding-bottom:10px;
+	text-align:center;
+	font-size:16px;
+}
+
 
 .logInfoHeader{
 	font-size:20px;
