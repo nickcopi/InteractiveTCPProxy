@@ -19,7 +19,7 @@ body{
 	width:100%;
 }
 .sessionBar:hover{
-	background-color:#1D1E18;
+	/*background-color:#1D1E18;*/
 }
 
 .menuItem{
@@ -60,6 +60,11 @@ body{
 .logItemUnColored{
 	background-color: #111519;
 }
+
+.activeLog{
+	background-color:#1D1E18;
+}
+
 .darkScrollbar::-webkit-scrollbar {
 	width: auto;
 	height: 0px;

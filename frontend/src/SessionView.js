@@ -22,7 +22,10 @@ export default class SessionView extends Component {
 		this.renameSession(e.target.innerText,this.state.runId);
 	}
 	clickLog(i){
-		this.setState({selectedLog:i});
+		const data = this.state.data;
+		data.logs.forEach(log=>log.active=false);
+		data.logs[i].active = true;
+		this.setState({selectedLog:i,data});
 	}
 	logNameBlur(e,index){
 		const data = this.state.data;
