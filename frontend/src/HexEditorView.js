@@ -53,7 +53,7 @@ export default class SessionView extends Component {
 			<div onMouseUp={this.handleMouseUp.bind(this)} className="hexEdit">
 				<HexEditor
 			      		columns={0x20}
-			      		rows={0x22}
+			      		rows={0x21}
 			      		data={data?(new TextEncoder('utf-16')).encode(atob(data)):[]}
 			      		nonce={1}
 					showAscii={true}
