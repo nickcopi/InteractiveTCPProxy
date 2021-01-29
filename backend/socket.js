@@ -3,6 +3,7 @@ const Logger = require('./logger');
 const warper = require('./warper');
 let server,nk;
 let clients = [];
+let remoteClients = [];
 
 const killServer = server=>{
 	return new Promise((resolve,reject)=>{
@@ -25,9 +26,10 @@ const makeServer = (address,port)=>{
 		await logger.init();
 		server = net.createServer((socket) => {
 			clients.push(socket);
-			nk =  net.createConnection(Number(port),address, () => {
+			const nk =  net.createConnection(Number(port),address, () => {
+			remoteClients.push(nk);
 				nk.on('data',data=>{
-					warper.warp(data);
+					data = warper.warp(data);
 					logger.log(data, nk.remoteAddress, nk.remotePort, socket.remoteAddress, socket.remotePort);
 					if(!socket.write(data))
 						nk.pause();
@@ -36,10 +38,12 @@ const makeServer = (address,port)=>{
 					socket.resume();
 				});
 				nk.on('close',()=>{
+					remoteClients = remoteClients.filter(c=>c!==nk);
 					socket.end();
+					if(!clients.length && !remoteClients.length) killServer(server);
 				});
 				socket.on('data',data=>{
-					warper.warp(data);
+					data = warper.warp(data);
 					logger.log(data,socket.remoteAddress, socket.remotePort, nk.remoteAddress, nk.remotePort);
 					if(!nk.write(data))
 						socket.pause();
@@ -49,13 +53,16 @@ const makeServer = (address,port)=>{
 					nk.resume();
 				});
 				socket.on('close',()=>{
+					clients = clients.filter(c=>c!==socket);
 					nk.end();
+					if(!clients.length && !remoteClients.length) killServer(server);
 				});
 			});
 		}).on('error', (err) => {
 			// Handle errors here.
 			console.error(err);
 		}).on('close',()=>{
+			console.log('closing server');
 			server.unref();
 		});
 
