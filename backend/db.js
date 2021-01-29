@@ -57,6 +57,13 @@ const nameSession = async(name,runId)=>{
 	});
 }
 
+const deleteSession = async(runId)=>{
+	const res = await db.collection('sessions').deleteOne({runId}).catch(e=>{
+		console.error(e);
+		throw 'Request failed!';
+	});
+}
+
 const nameLog = async(name,runId,index)=>{
 	const update = {
 		"$set":{
@@ -87,6 +94,7 @@ module.exports ={
 	getSessions,
 	newSession,
 	nameSession,
+	deleteSession,
 	nameLog,
 	addLog,
 	getLogs,

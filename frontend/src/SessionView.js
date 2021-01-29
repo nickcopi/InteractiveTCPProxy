@@ -34,6 +34,24 @@ export default class SessionView extends Component {
 		this.setState({data});
 		this.renameLog(name,this.state.runId,index);
 	}
+	deleteSession(){
+		const {name,runId} = this.state;
+		if(!window.confirm(`Really delete session ${name?name:runId}?`)) return;
+		fetch('/api/deleteSession',{
+			method: 'POST',
+			headers:{
+				'Content-Type': 'application/json'
+			},
+			body:JSON.stringify({
+				runId,
+			})
+		}).then(res=>res.json()).then(res=>{
+			console.log(res);
+			window.location.href='/';
+		}).catch(e=>{
+			console.error(e);
+		});
+	}
 
 	render(){
 		let {runId,name} = this.state;
@@ -45,7 +63,14 @@ export default class SessionView extends Component {
 		if(activeLog) logInfo = this.loadInfo(activeLog);
 		return (
 			<div>
-				<div contentEditable="true" onBlur={this.change.bind(this)} className="sessionBar">{name?name:runId}</div>
+				<div  className="sessionBar">
+					<span contentEditable="true" onBlur={this.change.bind(this)}>
+						{name?name:runId}
+					</span>
+					<span onClick={this.deleteSession.bind(this)} class="trash">
+					🗑
+					</span>
+				</div>
 				<div className="sessionView">
 					{sideLog}
 					<div className="sessionSideView">

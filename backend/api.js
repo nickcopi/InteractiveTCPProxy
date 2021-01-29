@@ -18,6 +18,15 @@ const nameSession = async (name,runId)=>{
 	return {success:true,message:`Name of ${runId} updated to ${name}.`};
 }
 
+const deleteSession = async (runId)=>{
+	try{
+		await db.deleteSession(runId)
+	} catch(e){
+		return {success:false,message:e.toString()};
+	}
+	return {success:true,message:`Deleted session ${runId}.`};
+}
+
 const nameLog = async (name,runId,index)=>{
 	try{
 		await db.nameLog(name,runId,index)
@@ -31,6 +40,7 @@ module.exports = {
 	getSessions,
 	getLogs,
 	nameSession,
+	deleteSession,
 	nameLog
 
 }
