@@ -1,10 +1,15 @@
 const socket = require('./socket');
 const api = require('./api');
 const db = require('./db');
+const webSocket = require('./webSocket');
 const express = require('express');
+const http = require('http');
 const bodyParser = require('body-parser');
 const app = express();
 const PORT = 8090;
+
+const server = http.createServer(app);
+webSocket.init(server);
 
 app.use(bodyParser.json());
 
@@ -26,27 +31,31 @@ app.get('/getLogs', async (req,res)=>{
 	res.send(await api.getLogs(runId));	
 });
 
+app.get('/isActive', async (req,res)=>{
+	res.send({active:socket.active});	
+});
+
 app.post('/nameSession', async(req,res)=>{
 	const {name, runId} = req.body;
 	if(!runId) return res.send({success:false,message:'Invalid request parameters.'});
 	res.send(await api.nameSession(name,runId));
-})
+});
 
 app.post('/deleteSession', async(req,res)=>{
 	const {runId} = req.body;
 	if(!runId) return res.send({success:false,message:'Invalid request parameters.'});
 	res.send(await api.deleteSession(runId));
-})
+});
 
 app.post('/nameLog', async(req,res)=>{
 	const {name, runId, index} = req.body;
 	if(!runId || !('index' in req.body)) return res.send({success:false,message:'Invalid request parameters.'});
 	res.send(await api.nameLog(name,runId,index));
-})
+});
 
 const init  = async ()=>{
 	await db.init();
-	app.listen(PORT,()=>{
+	server.listen(PORT,()=>{
 		console.log(`Listening on ${PORT}`);
 	});
 }

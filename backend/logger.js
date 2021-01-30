@@ -1,4 +1,5 @@
 const db = require('./db');
+const webSocket = require('./webSocket');
 
 
 
@@ -7,11 +8,15 @@ class Logger{
 		this.runId = runId;
 	}
 	async log(buf, srcAddr, srcPort, destAddr, destPort){
-		console.log(buf.toString());
 		await db.addLog(new Log(buf,srcAddr,srcPort,destAddr,destPort), this.runId);
 	}
 	async init(){
 		await db.newSession(this.runId);
+		console.log('alerting active');
+		webSocket.alertActive(true);
+	}
+	destroy(){
+		webSocket.alertActive(false);
 	}
 }
 

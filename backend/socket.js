@@ -15,14 +15,16 @@ const killServer = server=>{
 
 const makeServer = (address,port)=>{
 	return new Promise( async (resolve,reject)=>{
+		console.log('opening server');
 		if(server){
 			clients.forEach(client=>client.destroy());
 			clients = [];
 			await killServer(server);
 		}
 		if(nk) nk.destroy();
-		const runId = Buffer.from(String(Math.random())).toString('hex')
-		const logger = new Logger(runId);
+		module.exports.runId = Buffer.from(String(Math.random())).toString('hex')
+		module.exports.active = true;
+		const logger = new Logger(module.exports.runId);
 		await logger.init();
 		server = net.createServer((socket) => {
 			clients.push(socket);
@@ -63,6 +65,8 @@ const makeServer = (address,port)=>{
 			console.error(err);
 		}).on('close',()=>{
 			console.log('closing server');
+			module.exports.active = false;
+			logger.destroy();
 			server.unref();
 		});
 
@@ -74,5 +78,7 @@ const makeServer = (address,port)=>{
 	})
 }
 module.exports = {
-	makeServer
+	makeServer,
+	active:false,
+	runId:''
 }
