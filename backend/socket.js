@@ -1,6 +1,7 @@
 const net = require('net');
 const Logger = require('./logger');
 const warper = require('./warper');
+const socketState = require('./socketState');
 let server,nk;
 let clients = [];
 let remoteClients = [];
@@ -22,9 +23,9 @@ const makeServer = (address,port)=>{
 			await killServer(server);
 		}
 		if(nk) nk.destroy();
-		module.exports.runId = Buffer.from(String(Math.random())).toString('hex')
-		module.exports.active = true;
-		const logger = new Logger(module.exports.runId);
+		socketState.runId = Buffer.from(String(Math.random())).toString('hex')
+		socketState.active = true;
+		const logger = new Logger(socketState.runId);
 		await logger.init();
 		server = net.createServer((socket) => {
 			clients.push(socket);
@@ -65,7 +66,7 @@ const makeServer = (address,port)=>{
 			console.error(err);
 		}).on('close',()=>{
 			console.log('closing server');
-			module.exports.active = false;
+			socketState.active = false;
 			logger.destroy();
 			server.unref();
 		});
@@ -79,6 +80,4 @@ const makeServer = (address,port)=>{
 }
 module.exports = {
 	makeServer,
-	active:false,
-	runId:''
 }

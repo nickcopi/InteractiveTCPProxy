@@ -1,5 +1,5 @@
 const db = require('./db');
-const webSocket = require('./webSocket');
+//const webSocket = require('./webSocket');
 
 
 
@@ -12,11 +12,10 @@ class Logger{
 	}
 	async init(){
 		await db.newSession(this.runId);
-		console.log('alerting active');
-		webSocket.alertActive(true);
+		//webSocket.alertActive(true);
 	}
 	destroy(){
-		webSocket.alertActive(false);
+		//webSocket.alertActive(false);
 	}
 }
 

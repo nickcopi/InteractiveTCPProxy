@@ -1,4 +1,4 @@
-const socket = require('./socket');
+const socketState = require('./socketState');
 const api = require('./api');
 const ws = require('ws');
 
@@ -24,7 +24,7 @@ const handleMessage = async (socket,message)=>{
 	try {
 		return socket.send(JSON.stringify(await actions[body.action](body.args)));
 	} catch (e){
-		//console.log(e);
+		console.log(e);
 		return socket.send(JSON.stringify({error:'Unsupported action or argument.'}));
 	}
 }
@@ -37,14 +37,17 @@ const init = server=>{
 
 const checkActivity = async args=>{
 	return {
-		active:socket.active
+		active:socketState.active,
+		action:'receiveActive'
 	}
 }
 
 const getAllLogs = async args=>{
-	if(socket.active)
+	console.log(socketState);
+	if(socketState.active)
 		return {
-			data: await api.getLogs(socket.runId)
+			data: await api.getLogs(socketState.runId),
+			action: 'receiveLogs'
 		}
 	return {
 		error:'No active socket.'
@@ -63,7 +66,6 @@ const actions = {
 
 const alertActive = active=>{
 	sockets.forEach(socket=>{
-		console.log(`alerting a socket that it is ${active?'':'not'} active.`);
 		socket.send(JSON.stringify({action:'alertActive',active}));
 	});
 }
