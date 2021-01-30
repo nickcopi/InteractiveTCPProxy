@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SessionView from './SessionView';
 
 
 export default class App extends Component {
@@ -6,12 +7,12 @@ export default class App extends Component {
 	state={
 		client:null,
 		active:false,
+		runId:'',
 		data:null
 	}
 	actions = {
 		receiveActive:this.receiveActive,
 		reciveLogs:this.receiveLogs,
-		alertActive:this.alertActive
 	}
 
 	componentDidMount() {
@@ -37,22 +38,25 @@ export default class App extends Component {
 		}
 	}
 	receiveActive(data){
-		this.setState({active:data.active});
+		this.setState({active:data.active,runId:data.runId});
 		if(data.active){
 			this.state.client.send(JSON.stringify({action:'getAllLogs'}));
 		}
 	}
 	receiveLogs(data){
-		console.log(data);
-	}
-	alertActive(data){
-
+		this.setState({data});
 	}
 	
 	render() {
+		if(!this.state.active);
+			return (
+				<div>
+					<h1>There is currently no active connection.</h1>
+				</div>
+			);
 		return (
 			<div>
-				<br/>
+				<SessionView data={this.state.data} runId={this.state.runId}/>
 			</div>
 		);
 	}

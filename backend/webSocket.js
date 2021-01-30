@@ -37,8 +37,9 @@ const init = server=>{
 
 const checkActivity = async args=>{
 	return {
+		action:'receiveActive',
 		active:socketState.active,
-		action:'receiveActive'
+		runId:socketState.runId
 	}
 }
 
@@ -66,7 +67,7 @@ const actions = {
 
 const alertActive = active=>{
 	sockets.forEach(socket=>{
-		socket.send(JSON.stringify({action:'alertActive',active}));
+		socket.send(JSON.stringify({action:'receiveActive',active,runId:socketState.runId}));
 	});
 }
 const alertLog = log=>{

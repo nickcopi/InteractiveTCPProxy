@@ -83,8 +83,8 @@ export default class SessionView extends Component {
 		);
 	}
 	componentDidMount(){
-		this.setState({runId:this.props.runId,name:this.props.name});
-		this.updateSession();
+		this.setState({runId:this.props.runId,name:this.props.name,data:this.props.data});
+		if(!this.props.data) this.updateSession();
 	}
 	updateSession(){
 		fetch(`/api/getLogs?runId=${this.props.runId}`)
