@@ -21,6 +21,13 @@ app.get('/createServer',async (req,res)=>{
 	res.send({success:true});
 });
 
+app.post('/createServer',async (req,res)=>{
+	const {address,port, localPort} = req.body;
+	if(!address || !port || !localPort) return res.send({success:false,message:'Invalid request parameters.'});
+	await socket.makeServer(address,port,localPort);
+	res.send({success:true});
+});
+
 app.get('/getListeners', async (req,res)=>{
 	res.send(socket.getListeners());	
 });

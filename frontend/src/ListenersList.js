@@ -19,8 +19,9 @@ export default class ListenersList extends Component {
 		this.setState({nonce:this.props.nonce});
 		this.updateListeners();
 	}
-	componentDidUpdate(){
-		this.updateListeners();
+	componentDidUpdate(prevProps){
+		if(prevProps.nonce != this.props.nonce)
+			this.updateListeners();
 	}
 	updateListeners(){
 		fetch('/api/getListeners')
