@@ -1,4 +1,5 @@
 const net = require('net');
+const udp = require('dgram');
 const Logger = require('./logger');
 const Listener = require('./Listener');
 const warper = require('./warper');
@@ -48,6 +49,42 @@ const getListeners = ()=>{
 }
 
 
+const makeUDPServer = (address,port,localPort)=>{
+	return new Promise( async (resolve,reject)=>{
+		const runId = Buffer.from(String(Math.random())).toString('hex');
+		socketState.runId = runId
+		socketState.active = true;
+		const logger = new Logger(socketState.runId);
+		await logger.init();
+		socketState.listeners[runId] = new Listener(address,port,localPort);
+		server = udp.createSocket('udp4');
+		socketState.listeners[runId].server = server;
+		server.on('error',e=>{
+			console.error(e);
+		});
+		server.on('close',()=>{
+			console.log('closing udp server');
+			socketState.active = false;
+			logger.destroy();
+			server.unref();
+		});
+		server.on('message',(msg,info)=>{
+			msg = warper.warp(msg);
+			logger.log(msg,info.address,info.port,address,port)
+			const remoteClient = udp.createSocket('udp4');
+			remoteClient.on('message',(remoteMsg,remoteInfo)=>{
+				remoteMsg = warper.warp(remoteMsg);
+				logger.log(remoteMsg,address,port,info.address,info.port)
+				server.send(remoteMsg,info.port,info.address,e=>console.error(e));
+			});
+			remoteClient.send(msg,port,address,e=>console.error(e));
+
+		});
+		server.bind(localPort,()=>{
+			resolve();
+		});
+	});
+}
 
 const makeServer = (address,port,localPort)=>{
 	return new Promise( async (resolve,reject)=>{
@@ -120,4 +157,5 @@ module.exports = {
 	getListeners,
 	stopListener,
 	makeServer,
+	makeUDPServer
 }
