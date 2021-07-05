@@ -15,10 +15,19 @@ app.use(bodyParser.json());
 
 app.get('/createServer',async (req,res)=>{
 	console.log(req.query);
-	const {address,port} = req.query;
-	if(!address || !port) return res.send({success:false,message:'Invalid request parameters.'});
-	await socket.makeServer(address,port);
+	const {address,port, localPort} = req.query;
+	if(!address || !port || !localPort) return res.send({success:false,message:'Invalid request parameters.'});
+	await socket.makeServer(address,port,localPort);
 	res.send({success:true});
+});
+
+app.get('/getListeners', async (req,res)=>{
+	res.send(socket.getListeners());	
+});
+
+app.post('/stopListener', async (req,res)=>{
+	if(!runId) return res.send({success:false,message:'Invalid request parameters.'});
+	res.send(await socket.stopListener(runId));	
 });
 
 app.get('/getSessions', async (req,res)=>{

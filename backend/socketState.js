@@ -1,4 +1,5 @@
 module.exports = {
 	active:false,
-	runId:''
+	runId:'',
+	listeners:{}
 }
