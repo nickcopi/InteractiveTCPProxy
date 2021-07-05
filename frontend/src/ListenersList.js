@@ -4,8 +4,22 @@ import Listener from './Listener';
 
 export default class ListenersList extends Component {
 
-	state = {listeners:null};
+	state = {
+		listeners:null,
+		nonce:0
+	}
+	constructor(props){
+		super(props);
+	}
+	defaultProps = {
+		nonce:0,
+		redrawList:()=>{}
+	}
 	componentDidMount() {
+		this.setState({nonce:this.props.nonce});
+		this.updateListeners();
+	}
+	componentDidUpdate(){
 		this.updateListeners();
 	}
 	updateListeners(){
@@ -31,7 +45,7 @@ export default class ListenersList extends Component {
 	}
 	loadListeners(listeners){
 		return listeners.map(listener=>(
-			<Listener address={listener.address} port={listener.port} localPort={listener.localPort} runId={listener.runId}/>
+			<Listener address={listener.address} port={listener.port} localPort={listener.localPort} runId={listener.runId} redrawList={this.props.redrawList} nonce={this.state.nonce}/>
 
 		));
 	}

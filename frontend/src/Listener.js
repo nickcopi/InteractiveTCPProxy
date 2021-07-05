@@ -8,7 +8,8 @@ export default class Listener extends Component {
 		address:'',
 		port:null,
 		localPort:null,
-		runId:''
+		runId:'',
+		redrawList:()=>{}
 	}
 	render(){
 		return (
@@ -40,6 +41,7 @@ export default class Listener extends Component {
 			})
 		}).then(res=>res.json()).then(res=>{
 			console.log(res);
+			this.props.redrawList();
 			//window.location.href='/';
 		}).catch(e=>{
 			console.error(e);
