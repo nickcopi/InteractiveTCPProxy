@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import ListenersView from './ListenersView';
+import ListenersList from './ListenersList';
 
 
-export default class App extends Component {
+export default class ListenersView extends Component {
 
 	componentDidMount() {
 	}
@@ -10,7 +10,7 @@ export default class App extends Component {
 	render() {
 		return (
 			<div>
-				<ListenersView/>
+				<ListenersList/>
 			</div>
 		);
 	}
