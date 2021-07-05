@@ -31,7 +31,7 @@ export default class ListenersList extends Component {
 	}
 	loadListeners(listeners){
 		return listeners.map(listener=>(
-			<Listener/>
+			<Listener address={listener.address} port={listener.port} localPort={listener.localPort} runId={listener.runId}/>
 
 		));
 	}

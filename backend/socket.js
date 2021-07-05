@@ -29,6 +29,12 @@ const stopListener = async runId =>{
 		listener.clients = [];
 		await killServer(listener.server);
 		delete socketState.listeners[runId];
+		return {
+			success: true
+		}
+	}
+	return {
+		success: false
 	}
 }
 
@@ -100,10 +106,14 @@ const makeServer = (address,port,localPort)=>{
 		socketState.listeners[runId].server = server;
 
 		// Grab an arbitrary unused port.
-		server.listen(localPort,() => {
-			console.log('opened server on', server.address());
-			resolve();
-		});
+		try{
+			server.listen(localPort,() => {
+				console.log('opened server on', server.address());
+				resolve();
+			});
+		} catch(e){
+			console.error(e);
+		}
 	})
 }
 module.exports = {

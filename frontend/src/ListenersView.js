@@ -10,6 +10,7 @@ export default class ListenersView extends Component {
 	render() {
 		return (
 			<div>
+				<h1>Listeners</h1>
 				<ListenersList/>
 			</div>
 		);

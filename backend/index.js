@@ -26,6 +26,7 @@ app.get('/getListeners', async (req,res)=>{
 });
 
 app.post('/stopListener', async (req,res)=>{
+	const {runId} = req.body;
 	if(!runId) return res.send({success:false,message:'Invalid request parameters.'});
 	res.send(await socket.stopListener(runId));	
 });

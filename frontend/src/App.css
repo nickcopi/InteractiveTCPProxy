@@ -4,6 +4,21 @@ body{
 	color: white;
 }
 
+.listenerBar{
+	border-style:solid;
+	background-color: #212529;
+	border-color: #b19cd9;
+	/*padding:10px;*/
+	border-left:0px;
+	border-right:0px;
+	padding-top:10px;
+	padding-bottom:10px;
+	/*display: flex;*/
+	cursor:pointer;
+	/*justify-content: space-evenly;*/
+	width:100%;
+}
+
 .sessionBar{
 	border-style:solid;
 	background-color: #212529;
