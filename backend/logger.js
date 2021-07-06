@@ -12,10 +12,10 @@ class Logger{
 	}
 	async init(){
 		await db.newSession(this.runId);
-		webSocket.alertActive(true);
+		await webSocket.alertActive(true);
 	}
-	destroy(){
-		webSocket.alertActive(false);
+	async destroy(){
+		await webSocket.alertActive(false);
 	}
 }
 

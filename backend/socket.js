@@ -63,10 +63,10 @@ const makeUDPServer = (address,port,localPort,runId,listener,logger)=>{
 				});
 			} else console.error(err);
 		});
-		server.on('close',()=>{
+		server.on('close',async()=>{
 			console.log('closing udp server');
 			socketState.active = false;
-			logger.destroy();
+			await logger.destroy();
 			server.unref();
 		});
 		server.on('message',(msg,info)=>{
@@ -138,10 +138,10 @@ const makeTCPServer = (address,port,localPort,runId,listener,logger)=>{
 					message:`Failed to bind port ${localPort}.`
 				});
 			} else console.error(err);
-		}).on('close',()=>{
+		}).on('close',async ()=>{
 			console.log('closing server');
 			socketState.active = false;
-			logger.destroy();
+			await logger.destroy();
 			server.unref();
 		});
 		listener.server = server;
@@ -159,10 +159,10 @@ const makeServer = async (address,port,localPort,protocol)=>{
 	const runId = Buffer.from(String(Math.random())).toString('hex');
 	socketState.runId = runId
 	socketState.active = true;
-	const logger = new Logger(socketState.runId);
-	await logger.init();
 	const listener = new Listener(address,port,localPort, protocol);
 	socketState.listeners[runId] = listener;
+	const logger = new Logger(socketState.runId);
+	await logger.init();
 	switch(protocol){
 		case 'tcp':
 			return await makeTCPServer(address, port, localPort, runId, listener, logger);

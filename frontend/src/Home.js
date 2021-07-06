@@ -1,24 +1,24 @@
 import React, { Component } from 'react';
 import SessionView from './SessionView';
+import Listener from './Listener';
 
 
 export default class App extends Component {
 
 	state={
 		client:null,
-		active:false,
-		runId:'',
+		listeners:[],
 		data:null
 	}
 	actions = {
-		receiveActive:this.receiveActive,
+		receiveListeners:this.receiveListeners,
 		reciveLogs:this.receiveLogs,
 	}
 
 	componentDidMount() {
 		const client = new WebSocket('ws://localhost:8090');
 		client.addEventListener('open', function (event) {
-			    client.send(JSON.stringify({action:'checkActivity'}));
+			    client.send(JSON.stringify({action:'getListeners'}));
 		});
 		client.addEventListener('message',(m)=>this.onMessage.bind(this)(m));
 		this.setState({client});
@@ -37,28 +37,35 @@ export default class App extends Component {
 			console.error(e);
 		}
 	}
-	receiveActive(data){
-		this.setState({active:data.active,runId:data.runId});
-		if(data.active){
+	receiveListeners(data){
+		this.setState({listeners:data.listeners});
+		/*if(data.active){
 			this.state.client.send(JSON.stringify({action:'getAllLogs'}));
-		}
+		}*/
 	}
 	receiveLogs(data){
 		this.setState({data});
 	}
+	getListeners(){
+		console.log(this.state.listeners);
+		if(!this.state.listeners.length) return (<h1>There are currently no active listeners.</h1>);
+		return this.state.listeners.map(listener=>(
+			<Listener address={listener.address} port={listener.port} localPort={listener.localPort} protocol={listener.protocol} runId={listener.runId}/>
+		));
+
+	}
 	
 	render() {
-		if(!this.state.active);
-			return (
-				<div>
-					<h1>There is currently no active connection.</h1>
-				</div>
-			);
 		return (
+			<div>
+				{this.getListeners()}
+			</div>
+		);
+		/*return (
 			<div>
 				<SessionView data={this.state.data} runId={this.state.runId}/>
 			</div>
-		);
+		);*/
 	}
 }
 

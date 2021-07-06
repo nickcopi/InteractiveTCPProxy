@@ -35,11 +35,15 @@ const init = server=>{
 	wsServer.on('connection', listen);
 }
 
-const checkActivity = async args=>{
+const getListeners = async args=>{
 	return {
-		action:'receiveActive',
-		active:socketState.active,
-		runId:socketState.runId
+		action:'receiveListeners',
+		listeners: Object.entries(socketState.listeners).map(([k,v])=>{
+			return {
+				runId: k,
+				...(v.connectionInfo)
+			}
+		})
 	}
 }
 
@@ -60,15 +64,15 @@ const sendMessage = async args=>{
 }
 
 const actions = {
-	checkActivity,
+	getListeners,
 	getAllLogs,
 	sendMessage
 }
 
-const alertActive = active=>{
-	sockets.forEach(socket=>{
-		socket.send(JSON.stringify({action:'receiveActive',active,runId:socketState.runId}));
-	});
+const alertActive = async active=>{
+	await Promise.all(sockets.map(async socket=>{
+		socket.send(JSON.stringify(await getListeners()));
+	}));
 }
 const alertLog = log=>{
 
