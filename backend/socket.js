@@ -5,8 +5,6 @@ const Listener = require('./Listener');
 const warper = require('./warper');
 const socketState = require('./socketState');
 let server = null;
-let clients = [];
-let remoteClients = [];
 
 const killServer = server=>{
 	return new Promise((resolve,reject)=>{
@@ -28,6 +26,8 @@ const stopListener = async runId =>{
 	if(listener){
 		listener.clients.forEach(client=>client.destroy());
 		listener.clients = [];
+		if(listener.connectionInfo.protocol === 'udp')
+			await Promise.all(listener.remoteClients.map(async rc=> await killServer(rc)));
 		await killServer(listener.server);
 		delete socketState.listeners[runId];
 		return {
@@ -49,18 +49,19 @@ const getListeners = ()=>{
 }
 
 
-const makeUDPServer = (address,port,localPort)=>{
+const makeUDPServer = (address,port,localPort,runId,listener,logger)=>{
 	return new Promise( async (resolve,reject)=>{
-		const runId = Buffer.from(String(Math.random())).toString('hex');
-		socketState.runId = runId
-		socketState.active = true;
-		const logger = new Logger(socketState.runId);
-		await logger.init();
-		socketState.listeners[runId] = new Listener(address,port,localPort);
 		server = udp.createSocket('udp4');
-		socketState.listeners[runId].server = server;
-		server.on('error',e=>{
-			console.error(e);
+		listener.server = server;
+		server.on('error',async err=>{
+			if(err.errno === 'EADDRINUSE'){
+				console.log(`force killing ${runId}`);
+				await stopListener(runId);
+				resolve({
+					success:false,
+					message:`Failed to bind port ${localPort}.`
+				});
+			} else console.error(err);
 		});
 		server.on('close',()=>{
 			console.log('closing udp server');
@@ -71,36 +72,32 @@ const makeUDPServer = (address,port,localPort)=>{
 		server.on('message',(msg,info)=>{
 			msg = warper.warp(msg);
 			logger.log(msg,info.address,info.port,address,port)
-			const remoteClient = udp.createSocket('udp4');
+			remoteClient = udp.createSocket('udp4');
+			listener.remoteClients.push(remoteClient);
 			remoteClient.on('message',(remoteMsg,remoteInfo)=>{
 				remoteMsg = warper.warp(remoteMsg);
 				logger.log(remoteMsg,address,port,info.address,info.port)
 				server.send(remoteMsg,info.port,info.address,e=>console.error(e));
 			});
+			remoteClient.on('close',()=>{
+				remoteClient.unref();
+			});
 			remoteClient.send(msg,port,address,e=>console.error(e));
 
 		});
 		server.bind(localPort,()=>{
-			resolve();
+			console.log('opened udp server on', server.address());
+			resolve({success:true});
 		});
 	});
 }
 
-const makeServer = (address,port,localPort)=>{
+const makeTCPServer = (address,port,localPort,runId,listener,logger)=>{
 	return new Promise( async (resolve,reject)=>{
-		console.log('opening server');
-		const runId = Buffer.from(String(Math.random())).toString('hex');
-		socketState.runId = runId
-		socketState.active = true;
-		const logger = new Logger(socketState.runId);
-		await logger.init();
-		socketState.listeners[runId] = new Listener(address,port,localPort);
 		server = net.createServer((socket) => {
-			clients.push(socket);
-			socketState.listeners[runId].clients.push(socket);
+			listener.clients.push(socket);
 			const remoteSocket = net.createConnection(Number(port),address, () => {
-				remoteClients.push(remoteSocket);
-				socketState.listeners[runId].remoteClients.push(socket);
+				listener.remoteClients.push(socket);
 				remoteSocket.on('data',data=>{
 					data = warper.warp(data);
 					logger.log(data, remoteSocket.remoteAddress, remoteSocket.remotePort, socket.remoteAddress, socket.remotePort);
@@ -111,9 +108,9 @@ const makeServer = (address,port,localPort)=>{
 					socket.resume();
 				});
 				remoteSocket.on('close',()=>{
-					remoteClients = remoteClients.filter(c=>c!==remoteSocket);
+					listener.remoteClients = listener.remoteClients.filter(c=>c!==remoteSocket);
 					socket.end();
-					if(!clients.length && !remoteClients.length) killServer(server);
+					//if(!listener.clients.length && !listener.remoteClients.length) killServer(server);
 				});
 				socket.on('data',data=>{
 					data = warper.warp(data);
@@ -126,36 +123,60 @@ const makeServer = (address,port,localPort)=>{
 					remoteSocket.resume();
 				});
 				socket.on('close',()=>{
-					clients = clients.filter(c=>c!==socket);
+					listener.clients = listener.clients.filter(c=>c!==socket);
 					remoteSocket.end();
-					if(!clients.length && !remoteClients.length) killServer(server);
+					//if(!clients.length && !remoteClients.length) killServer(server);
 				});
 			});
-		}).on('error', (err) => {
+		}).on('error', async (err) => {
 			// Handle errors here.
-			console.error(err);
+			if(err.errno === 'EADDRINUSE'){
+				console.log(`force killing ${runId}`);
+				await stopListener(runId);
+				resolve({
+					success:false,
+					message:`Failed to bind port ${localPort}.`
+				});
+			} else console.error(err);
 		}).on('close',()=>{
 			console.log('closing server');
 			socketState.active = false;
 			logger.destroy();
 			server.unref();
 		});
-		socketState.listeners[runId].server = server;
+		listener.server = server;
 
 		// Grab an arbitrary unused port.
-		try{
-			server.listen(localPort,() => {
-				console.log('opened server on', server.address());
-				resolve();
-			});
-		} catch(e){
-			console.error(e);
-		}
-	})
+		server.listen(localPort,() => {
+			console.log('opened tcp server on', server.address());
+			resolve({success:true});
+		});
+	});
+}
+
+const makeServer = async (address,port,localPort,protocol)=>{
+	console.log('opening server');
+	const runId = Buffer.from(String(Math.random())).toString('hex');
+	socketState.runId = runId
+	socketState.active = true;
+	const logger = new Logger(socketState.runId);
+	await logger.init();
+	const listener = new Listener(address,port,localPort, protocol);
+	socketState.listeners[runId] = listener;
+	switch(protocol){
+		case 'tcp':
+			return await makeTCPServer(address, port, localPort, runId, listener, logger);
+		case 'udp':
+			return await makeUDPServer(address, port, localPort, runId, listener, logger);
+		default:
+			return {
+				success:false, 
+				message:`Unknown protocol ${protocol}`
+			}
+	}
 }
 module.exports = {
 	getListeners,
 	stopListener,
-	makeServer,
-	makeUDPServer
+	makeServer
 }
