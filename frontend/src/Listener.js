@@ -8,6 +8,7 @@ export default class Listener extends Component {
 		address:'',
 		port:null,
 		localPort:null,
+		protocol:'',
 		runId:'',
 		redrawList:()=>{}
 	}
@@ -26,7 +27,7 @@ export default class Listener extends Component {
 	componentDidMount(){
 	}
 	getDescription(){
-		return `${this.props.localPort} is bound locally to pass through to ${this.props.address}:${this.props.port}`;
+		return `${this.props.localPort} ${this.props.protocol} is bound locally to pass through to ${this.props.address}:${this.props.port}`;
 	}
 	deleteListener(){
 		const {runId} = this.props;
