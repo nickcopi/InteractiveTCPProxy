@@ -4,14 +4,18 @@ export default class Listener extends Component {
 	constructor(props){
 		super(props);
 	}
-	defaultProps = {
+	static defaultProps = {
 		address:'',
 		port:null,
 		localPort:null,
 		protocol:'',
 		runId:'',
 		redrawList:()=>{},
-		showDelete:true
+		clickListener:()=>{},
+		showDelete:true,
+	}
+	propTypes = {
+		clickListener:React.PropTypes.func
 	}
 	render(){
 		let deleteButton = '';
@@ -21,7 +25,7 @@ export default class Listener extends Component {
 			</span>
 		);
 		return (
-			<div className='listenerBar'>
+			<div className='listenerBar' onClick={this.clickListener.bind(this)}>
 				<span>
 					{this.getDescription()}
 				</span>
@@ -30,9 +34,13 @@ export default class Listener extends Component {
 		);
 	}
 	componentDidMount(){
+		console.log(this.props);
 	}
 	getDescription(){
 		return `${this.props.localPort} ${this.props.protocol} is bound locally to pass through to ${this.props.address}:${this.props.port}`;
+	}
+	clickListener(){
+		this.props.clickListener(this.props.runId);
 	}
 	deleteListener(){
 		const {runId} = this.props;

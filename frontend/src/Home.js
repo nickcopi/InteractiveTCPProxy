@@ -8,11 +8,12 @@ export default class App extends Component {
 	state={
 		client:null,
 		listeners:[],
-		data:null
+		runId:'',
+		logs:null
 	}
 	actions = {
 		receiveListeners:this.receiveListeners,
-		reciveLogs:this.receiveLogs,
+		receiveLogs:this.receiveLogs,
 	}
 
 	componentDidMount() {
@@ -39,33 +40,42 @@ export default class App extends Component {
 	}
 	receiveListeners(data){
 		this.setState({listeners:data.listeners});
-		/*if(data.active){
-			this.state.client.send(JSON.stringify({action:'getAllLogs'}));
-		}*/
 	}
 	receiveLogs(data){
-		this.setState({data});
+		console.log(data)
+		this.setState({logs:data.logs});
 	}
 	getListeners(){
 		console.log(this.state.listeners);
 		if(!this.state.listeners.length) return (<h1>There are currently no active listeners.</h1>);
 		return this.state.listeners.map(listener=>(
-			<Listener address={listener.address} port={listener.port} localPort={listener.localPort} protocol={listener.protocol} runId={listener.runId} showDelete={false}/>
+			<Listener address={listener.address} port={listener.port} localPort={listener.localPort} protocol={listener.protocol} runId={listener.runId} showDelete={false} clickListener={this.clickListener.bind(this)}/>
 		));
-
+	}
+	clickListener(runId){
+		this.setState({runId});
+		this.state.client.send(JSON.stringify({
+			action:'getAllLogs',
+			args:{
+				runId
+			}
+		}));
+		
 	}
 	
 	render() {
-		return (
-			<div>
-				{this.getListeners()}
-			</div>
-		);
-		/*return (
-			<div>
-				<SessionView data={this.state.data} runId={this.state.runId}/>
-			</div>
-		);*/
+		if(!this.state.logs)
+			return (
+				<div>
+					{this.getListeners()}
+				</div>
+			);
+		else
+			return (
+				<div>
+					<SessionView data={this.state.logs} runId={this.state.runId}/>
+				</div>
+			);
 	}
 }
 

@@ -46,7 +46,7 @@ export default class ListenersList extends Component {
 	}
 	loadListeners(listeners){
 		return listeners.map(listener=>(
-			<Listener address={listener.address} port={listener.port} localPort={listener.localPort} protocol={listener.protocol} runId={listener.runId} redrawList={this.props.redrawList} nonce={this.state.nonce} showDelete={true}/>
+			<Listener address={listener.address} port={listener.port} localPort={listener.localPort} protocol={listener.protocol} runId={listener.runId} redrawList={this.props.redrawList} nonce={this.state.nonce}/>
 
 		));
 	}

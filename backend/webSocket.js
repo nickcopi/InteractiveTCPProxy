@@ -48,10 +48,10 @@ const getListeners = async args=>{
 }
 
 const getAllLogs = async args=>{
-	console.log(socketState);
-	if(socketState.active)
+	console.log(args);
+	if(socketState.listeners[args.runId])
 		return {
-			data: await api.getLogs(socketState.runId),
+			logs: await api.getLogs(args.runId),
 			action: 'receiveLogs'
 		}
 	return {
