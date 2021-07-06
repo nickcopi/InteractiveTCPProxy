@@ -10,17 +10,22 @@ export default class Listener extends Component {
 		localPort:null,
 		protocol:'',
 		runId:'',
-		redrawList:()=>{}
+		redrawList:()=>{},
+		showDelete:true
 	}
 	render(){
+		let deleteButton = '';
+		if(this.props.showDelete) deleteButton = (
+			<span onClick={this.deleteListener.bind(this)} class="trash">
+			🗑
+			</span>
+		);
 		return (
 			<div className='listenerBar'>
 				<span>
 					{this.getDescription()}
 				</span>
-				<span onClick={this.deleteListener.bind(this)} class="trash">
-				🗑
-				</span>
+				{deleteButton}
 			</div>
 		);
 	}

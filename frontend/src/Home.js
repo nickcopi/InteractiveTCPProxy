@@ -50,7 +50,7 @@ export default class App extends Component {
 		console.log(this.state.listeners);
 		if(!this.state.listeners.length) return (<h1>There are currently no active listeners.</h1>);
 		return this.state.listeners.map(listener=>(
-			<Listener address={listener.address} port={listener.port} localPort={listener.localPort} protocol={listener.protocol} runId={listener.runId}/>
+			<Listener address={listener.address} port={listener.port} localPort={listener.localPort} protocol={listener.protocol} runId={listener.runId} showDelete={false}/>
 		));
 
 	}
