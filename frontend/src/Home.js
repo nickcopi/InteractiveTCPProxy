@@ -14,6 +14,7 @@ export default class App extends Component {
 	actions = {
 		receiveListeners:this.receiveListeners,
 		receiveLogs:this.receiveLogs,
+		receiveNewLog:this.receiveNewLog
 	}
 
 	componentDidMount() {
@@ -44,6 +45,13 @@ export default class App extends Component {
 	receiveLogs(data){
 		console.log(data)
 		this.setState({logs:data.logs});
+	}
+	receiveNewLog(data){
+		console.log(this.state.logs);
+		if(this.state.logs){
+			this.state.logs.logs.push(data.log);
+			this.setState({logs:this.state.logs});
+		}
 	}
 	getListeners(){
 		console.log(this.state.listeners);

@@ -22,7 +22,7 @@ const handleMessage = async (socket,message)=>{
 		return socket.send(JSON.stringify({error:'Message not sent in JSON format.'}));
 	}
 	try {
-		return socket.send(JSON.stringify(await actions[body.action](body.args)));
+		return socket.send(JSON.stringify(await actions[body.action](body.args,socket)));
 	} catch (e){
 		console.log(e);
 		return socket.send(JSON.stringify({error:'Unsupported action or argument.'}));
@@ -47,9 +47,10 @@ const getListeners = async args=>{
 	}
 }
 
-const getAllLogs = async args=>{
+const getAllLogs = async (args,socket)=>{
 	console.log(args);
 	if(socketState.listeners[args.runId])
+		socket.runId = args.runId;
 		return {
 			logs: await api.getLogs(args.runId),
 			action: 'receiveLogs'
@@ -74,8 +75,12 @@ const alertActive = async active=>{
 		socket.send(JSON.stringify(await getListeners()));
 	}));
 }
-const alertLog = log=>{
-
+const alertLog = (log,runId)=>{
+	sockets.forEach(socket=>{
+		if(socket.runId === runId)
+			socket.send(JSON.stringify({action:'receiveNewLog',log:log}));
+	});
+	
 }
 
 

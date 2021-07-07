@@ -8,7 +8,9 @@ class Logger{
 		this.runId = runId;
 	}
 	async log(buf, srcAddr, srcPort, destAddr, destPort){
-		await db.addLog(new Log(buf,srcAddr,srcPort,destAddr,destPort), this.runId);
+		const log = new Log(buf,srcAddr,srcPort,destAddr,destPort);
+		webSocket.alertLog(log, this.runId);
+		await db.addLog(log, this.runId);
 	}
 	async init(){
 		await db.newSession(this.runId);
