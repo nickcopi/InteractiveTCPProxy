@@ -77,7 +77,7 @@ const nameLog = async(name,runId,index)=>{
 }
 
 const getSessions = async ()=>{
-	const res = await db.collection('sessions').find({}).toArray().catch(e=>{
+	const res = await db.collection('sessions').find({},{runId:1,name:1}).toArray().catch(e=>{
 		console.error(e);
 		throw 'Request failed!';
 	});
