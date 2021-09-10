@@ -4,7 +4,8 @@ const webSocket = require('./webSocket');
 
 
 class Logger{
-	constructor(runId){
+	constructor(runId,address,port){
+		this.name=`${address}:${port}`;
 		this.runId = runId;
 	}
 	async log(buf, srcAddr, srcPort, destAddr, destPort){
@@ -13,7 +14,7 @@ class Logger{
 		await db.addLog(log, this.runId);
 	}
 	async init(){
-		await db.newSession(this.runId);
+		await db.newSession(this.runId,this.name);
 		await webSocket.alertActive(true);
 	}
 	async destroy(){

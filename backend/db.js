@@ -17,8 +17,8 @@ const createCollection  = async name=>{
 }
 
 
-const newSession = async(runId)=>{
-	const res = await db.collection('sessions').insertOne({runId,logs:[]}).catch(e=>{
+const newSession = async(runId,name)=>{
+	const res = await db.collection('sessions').insertOne({runId,name,logs:[]}).catch(e=>{
 		console.error(e);
 		throw 'Request failed!';
 	});

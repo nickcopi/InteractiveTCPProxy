@@ -161,7 +161,7 @@ const makeServer = async (address,port,localPort,protocol)=>{
 	socketState.active = true;
 	const listener = new Listener(address,port,localPort, protocol);
 	socketState.listeners[runId] = listener;
-	const logger = new Logger(socketState.runId);
+	const logger = new Logger(socketState.runId,address,port);
 	await logger.init();
 	switch(protocol){
 		case 'tcp':
