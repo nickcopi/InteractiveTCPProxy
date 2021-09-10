@@ -5,10 +5,11 @@ export default class LogSidebar extends Component {
 	constructor(props){
 		super(props);
 	}
-	defaultProps = {
+	static defaultProps = {
 		data:[],
 		click:()=>{},
-		query:''
+		query:'',
+		reverse: false
 	}
 	handleChange(e){
 		this.setState({query:e.target.value});
@@ -23,6 +24,7 @@ export default class LogSidebar extends Component {
 	render(){
 		let {logs} = this.props.data;
 		logs.forEach((log,i)=>log.index=i);
+		if(this.props.reverse) logs = logs.reverse();
 		let base;
 		if(logs.length > 0)
 			base = logs[0].sourceAddress;

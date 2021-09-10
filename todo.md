@@ -8,3 +8,4 @@
 [ ] Add prettier UI for listener adding
 [ ] Fix whatever is going on with live websocket viewing of sessions
 [ ] Allow for chunked log loading because it uses a lot of memory to load them all at once and is generally bad
+[ ] Add an option to clear all sessions

@@ -7,9 +7,10 @@ export default class SessionView extends Component {
 	constructor(props){
 		super(props);
 	}
-	defaultProps = {
+	static defaultProps = {
 		runId:'',
-		name:''
+		name:'',
+		reverse: false,
 	}
 	state = {
 		data:null,
@@ -103,7 +104,7 @@ export default class SessionView extends Component {
 	}
 
 	loadSession(){
-		return (<LogSidebar click={this.clickLog.bind(this)} data={this.state.data}/>);
+		return (<LogSidebar reverse={this.props.reverse} click={this.clickLog.bind(this)} data={this.state.data}/>);
 
 	}
 	renameLog(name,runId,index){

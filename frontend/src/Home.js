@@ -81,7 +81,7 @@ export default class App extends Component {
 		else
 			return (
 				<div>
-					<SessionView data={this.state.logs} runId={this.state.runId}/>
+					<SessionView reverse={true} data={this.state.logs} runId={this.state.runId}/>
 				</div>
 			);
 	}
