@@ -64,6 +64,10 @@ app.post('/deleteSession', async(req,res)=>{
 	res.send(await api.deleteSession(runId));
 });
 
+app.get('/deleteAllSessions', async(req,res)=>{
+	res.send(await api.deleteAllSessions());
+});
+
 app.post('/nameLog', async(req,res)=>{
 	const {name, runId, index} = req.body;
 	if(!runId || !('index' in req.body)) return res.send({success:false,message:'Invalid request parameters.'});

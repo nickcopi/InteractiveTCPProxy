@@ -64,6 +64,13 @@ const deleteSession = async(runId)=>{
 	});
 }
 
+const deleteAllSessions = async()=>{
+	const res = await db.collection('sessions').deleteMany().catch(e=>{
+		console.error(e);
+		throw 'Request failed!';
+	});
+}
+
 const nameLog = async(name,runId,index)=>{
 	const update = {
 		"$set":{
@@ -95,6 +102,7 @@ module.exports ={
 	newSession,
 	nameSession,
 	deleteSession,
+	deleteAllSessions,
 	nameLog,
 	addLog,
 	getLogs,
