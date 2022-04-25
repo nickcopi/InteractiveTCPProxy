@@ -49,12 +49,13 @@ const getListeners = async args=>{
 
 const getAllLogs = async (args,socket)=>{
 	console.log(args);
-	if(socketState.listeners[args.runId])
+	if(socketState.listeners[args.runId]){
 		socket.runId = args.runId;
 		return {
 			logs: await api.getLogs(args.runId),
 			action: 'receiveLogs'
 		}
+	}
 	return {
 		error:'No active socket.'
 	}
