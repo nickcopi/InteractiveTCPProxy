@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/***REMOVED***/btd6tcpproxy.git"
+    "url": ""
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/***REMOVED***/btd6tcpproxy/issues"
+    "url": ""
   },
-  "homepage": "https://github.com/***REMOVED***/btd6tcpproxy#readme",
+  "homepage": "",
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
